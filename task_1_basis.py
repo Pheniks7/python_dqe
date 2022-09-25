@@ -59,7 +59,14 @@ def split_even_odd(lst):
     return calc_average(even_list), calc_average(odd_list)
 
 
-list_100 = create_rand_list(20, 20)
-print(sort_list(list_100))
-print(calc_average(list_100))
-print(split_even_odd(list_100))
+# create list containing 100 elements with random integer values from 0 till 1000 and print it
+list_100 = create_rand_list(100, 1000)
+print('Initial list:', list_100)
+# sort the list and print it
+print('Sorted list:', sort_list(list_100))
+# calculate list elements average value and print it
+print('List elements average value:', calc_average(list_100))
+# calculate average for even numbers and print it
+print('Average for even numbers:', split_even_odd(list_100)[0])
+# calculate average for odd numbers and print it
+print('Average for odd numbers:', split_even_odd(list_100)[1])
