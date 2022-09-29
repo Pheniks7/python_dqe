@@ -85,14 +85,14 @@ def get_common_dict(dict_list, common_set):
         # iterate every dict in the list and get dict index for next operations
         for index, dict_elem in enumerate(new_dict_list, start=1):
             # in case of current key does not exist in current dict - pass
-            if dict_elem.get(key) is None:
-                pass
-            else:
+            if dict_elem.get(key) is not None:
                 # in case of current value greater than previous one for current key
                 if dict_elem.get(key) > max_value:
                     # redefine max_value and save dict number to max_value_num
                     max_value = dict_elem.get(key)
                     max_value_num = index
+                else:
+                    pass
                 # remove key-value from current dict, leave in new_dict_list only non-repeatable keys
                 dict_elem.pop(key)
         # once found max value and its dict number - create new key name with index and save it to the new dict
