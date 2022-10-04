@@ -47,6 +47,21 @@ def capitalize_first_words(txt):
     return '\n'.join(lines)
 
 
+def check_one_match(txt):
+    pattern = '[.|!|?|\n|]\s(\w)'
+    result = ''
+    if re.search(pattern, txt):
+        m = re.search(pattern, txt)
+        start = m.span()[0]
+        end = m.span()[1]
+        fisrt_word_upper = txt[start:end].upper()
+        result = txt[:start] + fisrt_word_upper + txt[end:]
+        print(result)
+        if re.search(pattern, result):
+            check_one_match(result)
+    return result
+
+
 print('Number of whitespace characters:', count_whitespaces(initial_text))
 print('Number of whitespace characters:', count_whitespaces_2(initial_text), '\n')
 
@@ -58,3 +73,6 @@ print('With appended string\n', text_update_2, '\n')
 
 text_update_3 = capitalize_first_words(text_update_2)
 print('With capitalized 1st words\n', text_update_3, '\n')
+
+#text_update_4 = check_one_match(text_update_2)
+#print('With capitalized 1st words\n', text_update_4, '\n')
