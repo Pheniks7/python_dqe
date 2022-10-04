@@ -30,9 +30,10 @@ def fix_iz_get_lower(txt):
 
 
 def extract_append_last_words(txt):
+    control_phrase = 'add it to the end of this paragraph.'
     last_words_lst = re.findall('\s(\w+)[.|!|?|…]', txt)
-    last_words_sentence = ' '.join(last_words_lst).capitalize() + '.'
-    full_txt = txt.capitalize() + ' ' + last_words_sentence
+    last_words_sentence = control_phrase + ' ' + ' '.join(last_words_lst).capitalize() + '.'
+    full_txt = re.sub(control_phrase, last_words_sentence, txt)
     return full_txt
 
 
