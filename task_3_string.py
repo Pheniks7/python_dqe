@@ -40,7 +40,7 @@ def capitalize_first_words(txt):
     lines = []
     for line in txt.split('\n'):
         sentences = []
-        for sentence in re.split('[.|!|?]', line):
+        for sentence in line.split('.'):
             m = re.match('[ \n|\t]*(.*)', sentence)
             sentences.append(re.sub(m.group(1), m.group(1).capitalize(), sentence))
         lines.append('.'.join(sentences))
@@ -56,5 +56,5 @@ print('With fixed IZ\n', text_update_1, '\n')
 text_update_2 = extract_append_last_words(text_update_1)
 print('With appended string\n', text_update_2, '\n')
 
-text_update_3 = capitalize_first_words(text_update_1)
+text_update_3 = capitalize_first_words(text_update_2)
 print('With capitalized 1st words\n', text_update_3, '\n')
