@@ -42,25 +42,37 @@ def capitalize_first_words(txt):
     for line in txt.split('\n'):
         sentences = []
         for sentence in line.split('.'):
-            m = re.match('[ \n|\t]*(.*)', sentence)
+            m = re.search('[\s|\n]*(.*)', sentence)
             sentences.append(re.sub(m.group(1), m.group(1).capitalize(), sentence))
         lines.append('.'.join(sentences))
     return '\n'.join(lines)
 
 
+def start_paragraph(txt):
+    m = re.search('^\s*(\w)', txt)
+    start = m.span()[0]
+    end = m.span()[1]
+    txt = re.sub(txt[start:end], txt[start:end].upper(), txt, 1)
+    return txt
+
+
 def check_one_match(txt):
-    pattern = '[.|!|?|\n|]\s(\w)'
-    result = ''
+    pattern = '[.|!|?|\n]\s*[a-z]'
     if re.search(pattern, txt):
         m = re.search(pattern, txt)
         start = m.span()[0]
         end = m.span()[1]
         fisrt_word_upper = txt[start:end].upper()
-        result = txt[:start] + fisrt_word_upper + txt[end:]
-        print(result)
-        if re.search(pattern, result):
-            check_one_match(result)
-    return result
+        txt = txt[:start] + fisrt_word_upper + txt[end:]
+        while len(re.findall(pattern, txt)) > 0:
+            txt = check_one_match(txt)
+    return txt
+
+
+def capitalize_first_words_2(txt):
+    txt = start_paragraph(txt)
+    txt = check_one_match(txt)
+    return txt
 
 
 print('Number of whitespace characters:', count_whitespaces(initial_text))
@@ -73,7 +85,7 @@ text_update_2 = extract_append_last_words(text_update_1)
 print('With appended string\n', text_update_2, '\n')
 
 text_update_3 = capitalize_first_words(text_update_2)
-print('With capitalized 1st words\n', text_update_3, '\n')
+print('With capitalized 1st words V_1\n', text_update_3, '\n')
 
-#text_update_4 = check_one_match(text_update_2)
-#print('With capitalized 1st words\n', text_update_4, '\n')
+text_update_4 = capitalize_first_words_2(text_update_2)
+print('With capitalized 1st words V_2\n', text_update_4, '\n')
