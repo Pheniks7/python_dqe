@@ -37,17 +37,6 @@ def extract_append_last_words(txt):
     return full_txt
 
 
-def capitalize_first_words(txt):
-    lines = []
-    for line in txt.split('\n'):
-        sentences = []
-        for sentence in line.split('.'):
-            m = re.search('[\s|\n]*(.*)', sentence)
-            sentences.append(re.sub(m.group(1), m.group(1).capitalize(), sentence))
-        lines.append('.'.join(sentences))
-    return '\n'.join(lines)
-
-
 def start_paragraph(txt):
     m = re.search('^\s*(\w)', txt)
     start = m.span()[0]
@@ -69,23 +58,22 @@ def check_one_match(txt):
     return txt
 
 
-def capitalize_first_words_2(txt):
+def capitalize_first_words(txt):
     txt = start_paragraph(txt)
     txt = check_one_match(txt)
     return txt
 
+# print('Number of whitespace characters:', count_whitespaces(initial_text))
+# print('Number of whitespace characters:', count_whitespaces_2(initial_text), '\n')
 
-print('Number of whitespace characters:', count_whitespaces(initial_text))
-print('Number of whitespace characters:', count_whitespaces_2(initial_text), '\n')
+# text_update_1 = fix_iz_get_lower(initial_text)
+# print('With fixed IZ\n', text_update_1, '\n')
 
-text_update_1 = fix_iz_get_lower(initial_text)
-print('With fixed IZ\n', text_update_1, '\n')
+# text_update_2 = extract_append_last_words(text_update_1)
+# print('With appended string\n', text_update_2, '\n')
 
-text_update_2 = extract_append_last_words(text_update_1)
-print('With appended string\n', text_update_2, '\n')
+# text_update_3 = capitalize_first_words(text_update_2)
+# print('With capitalized 1st words V_1\n', text_update_3, '\n')
 
-text_update_3 = capitalize_first_words(text_update_2)
-print('With capitalized 1st words V_1\n', text_update_3, '\n')
-
-text_update_4 = capitalize_first_words_2(text_update_2)
-print('With capitalized 1st words V_2\n', text_update_4, '\n')
+# text_update_4 = capitalize_first_words_2(text_update_2)
+# print('With capitalized 1st words V_2\n', text_update_4, '\n')
