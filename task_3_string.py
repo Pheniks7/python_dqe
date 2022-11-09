@@ -63,6 +63,14 @@ def capitalize_first_words(txt):
     txt = check_one_match(txt)
     return txt
 
+
+def parse_text_by_pattern(pattern, txt):
+    try:
+        found = re.search(pattern, txt.strip()).group(1)
+        return found.strip()
+    except AttributeError:
+        return None
+
 # print('Number of whitespace characters:', count_whitespaces(initial_text))
 # print('Number of whitespace characters:', count_whitespaces_2(initial_text), '\n')
 
