@@ -3,14 +3,29 @@ import re
 from datetime import datetime, timedelta
 from random import randrange
 import file_worker
-
 from task_3_string import capitalize_first_words, parse_text_by_pattern
 
 
 def create_record_lines(class_name, text_to_publish):
-    return (f'\n{class_name.ljust(35, "-")}\n'
+    return (f'\n{class_name.ljust(40, "-")}\n'
             f'{text_to_publish}\n'
-            f'-----------------------------------\n')
+            f'----------------------------------------\n')
+
+
+def choose_option(options, option_number):
+    counter = 0
+    while True:
+        option = input('\nChoose one of the following options to work with NewsFeed:\n'
+                       f'{options}\nYour choice: ')
+        if option in map(str, range(1, option_number + 1)):
+            break
+        counter = counter + 1
+        if counter < 3:
+            print('\nIncorrect input. Try again!\n')
+        else:
+            print('\nIncorrect input. Stop & Quit!\n')
+            break
+    return option
 
 
 class News:
@@ -70,24 +85,22 @@ class Joke:
 class NewsFeed:
 
     def __init__(self):
-        # self.news_feed = ['News feed:\n']
         self.news_feed = 'News feed:\n'
 
     def add_content_manually(self):
         while True:
-            option = input('Choose one of the following options You want to add in NewsFeed:\n'
-                           '1 - News\n2 - PrivateAd\n3 - Joke\nYour choice: ')
-            if option in ['1', '2', '3']:
+            option = choose_option('1 - Add News\n2 - Add PrivateAd\n3 - Add Joke\n4 - Other', 4)
+            if option == '1':
+                content = News().create_record()
+            elif option == '2':
+                content = PrivateAd().create_record()
+            elif option == '3':
+                content = Joke().create_record()
+            else:
+                self.choose_options()
                 break
-            print('\nIncorrect input. Try again!\n')
-        if option == '1':
-            content = News().create_record()
-        elif option == '2':
-            content = PrivateAd().create_record()
-        else:
-            content = Joke().create_record()
-        self.news_feed = self.news_feed + content
-        print('\nNew content was added\n')
+            self.news_feed = self.news_feed + content
+            print(f'\n{content}\nNew content was added\n' if content is not None else 'No new content')
 
     def add_content_from_text(self, txt):
         raw_list = txt.split('-|-')
@@ -128,9 +141,9 @@ class NewsFeed:
             self.add_content_from_text(text)
             os.remove(path)
             print('The file was deleted\n')
-            return text
         except FileNotFoundError:
             print('The file was not found\n')
+        self.choose_options()
 
     def save_as_file(self, txt=None):
         news_feed = self.news_feed if txt is None else txt
@@ -139,3 +152,17 @@ class NewsFeed:
         with open(path, 'w') as file:
             file.write(news_feed)
         print('\nNews feed was saved as a file\n')
+
+    def choose_options(self):
+        option = choose_option(
+            '1 - Add manually\n2 - Add from file\n3 - Show News feed\n4 - Save in file\n5 - Stop & Quit', 5)
+        if option == '1':
+            self.add_content_manually()
+        elif option == '2':
+            self.read_file()
+        elif option == '3':
+            self.show_news_feed()
+        elif option == '4':
+            self.save_as_file()
+        else:
+            pass
