@@ -1,30 +1,49 @@
+import os
+import re
 from datetime import datetime, timedelta
 from random import randrange
-from task_3_string import capitalize_first_words
-from file_worker import TextFile
-import re
+import file_worker
+from task_3_string import capitalize_first_words, parse_text_by_pattern
 
 
 def create_record_lines(class_name, text_to_publish):
-    return (f'{class_name.ljust(35, "-")}\n'
-            f'{text_to_publish}'
-            f'\n-----------------------------------\n')
+    return (f'\n{class_name.ljust(40, "-")}\n'
+            f'{text_to_publish}\n'
+            f'----------------------------------------\n')
+
+
+def choose_option(options, option_number):
+    counter = 0
+    while True:
+        option = input('\nChoose one of the following options to work with NewsFeed:\n'
+                       f'{options}\nYour choice: ')
+        if option in map(str, range(1, option_number + 1)):
+            break
+        counter = counter + 1
+        if counter < 3:
+            print('\nIncorrect input. Try again!\n')
+        else:
+            print('\nIncorrect input. Stop & Quit!\n')
+            break
+    return option
 
 
 class News:
-    txt = 'No text'
-    city = 'No city'
+    def make_news(self, txt=None, city=None):
+        self.cur_time = datetime.now()
+        self.txt = capitalize_first_words(input('\nType the news: ') if txt is None else txt)
+        self.city = (input('Enter the city: ').title() if city is None else city).title()
 
-    def create_record(self, txt=None, city=None):
-        raw_txt = input('\nType the news: ') if txt is None else txt
-        News().txt = capitalize_first_words(raw_txt)
-        raw_city = input('Enter the city: ').title() if city is None else city
-        News().city = raw_city.title()
-        self.text_to_publish = f'{News().txt}\n{News().city}, {datetime.now().strftime("%d/%m/%Y %H.%m")}'
-        return create_record_lines(__class__.__name__, self.text_to_publish)
+    def create_record(self):
+        text_to_publish = f'{self.txt}\n{self.city}, {self.cur_time.strftime("%d/%m/%Y %H.%m")}'
+        return create_record_lines(__class__.__name__, text_to_publish)
 
 
 class PrivateAd:
+    def make_ad(self, txt=None, date=None):
+        self.txt = capitalize_first_words(input('\nType the advertisement: ') if txt is None else txt)
+        self.date = self.__check_input_date(date)
+
     def __check_input_date(self, date=None):
         for i in range(3):
             try:
@@ -38,33 +57,28 @@ class PrivateAd:
             except ValueError:
                 print('\nPlease, enter the expiration date with VALID value AND in CORRECT formate "dd/mm/yy"')
             if i == 2:
-                print('We can offer you 15 days publishing')
+                print('\nWe can offer you 15 days publishing\n')
                 input_date = datetime.now() + timedelta(days=15)
                 return input_date
 
-    def create_record(self, txt=None, date=None):
-        raw_txt = input('\nType the advertisement: ') if txt is None else txt
-        txt = capitalize_first_words(raw_txt)
-        date = self.__check_input_date(date)
-        date_diff = date - datetime.now()
-        text_to_publish = f'{txt}\nActual until: {date.strftime("%d/%m/%Y")}, {date_diff.days} days left'
+    def create_record(self):
+        date_diff = self.date - datetime.now()
+        text_to_publish = f'{self.txt}\nActual until: {self.date.strftime("%d/%m/%Y")}, {date_diff.days} days left'
         return create_record_lines(__class__.__name__, text_to_publish)
 
 
 class Joke:
+    def make_joke(self, txt=None):
+        self.txt = capitalize_first_words(input('\nType the joke: ') if txt is None else txt)
+        self.rate = self.__rate_joke()
+
     def __rate_joke(self):
         joke_meter_list = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten']
         return f'{joke_meter_list[randrange(10)]} of ten'
 
-    def create_record(self, txt=None):
-        raw_txt = input('\nType the joke: ') if txt is None else txt
-        txt = capitalize_first_words(raw_txt)
-        rate = self.__rate_joke()
-        text_to_publish = f'{txt}\nFunny meter - {rate}'
+    def create_record(self):
+        text_to_publish = f'{self.txt}\nFunny meter - {self.rate}'
         return create_record_lines(__class__.__name__, text_to_publish)
-
-
-# print(Joke().create_record())
 
 
 class NewsFeed:
@@ -77,42 +91,89 @@ class NewsFeed:
 
     def add_content_manually(self):
         while True:
-            option = input('Choose one of the following options You want to add in NewsFeed:\n'
-                           '1 - News\n2 - PrivateAd\n3 - Joke\nYour choice: ')
-            if option in ['1', '2', '3']:
+            option = choose_option('1 - Add News\n2 - Add PrivateAd\n3 - Add Joke\n4 - Other', 4)
+            if option == '1':
+                self.new.make_news()
+                content = self.new.create_record()
+            elif option == '2':
+                self.ad.make_ad()
+                content = self.ad.create_record()
+            elif option == '3':
+                self.joke.make_joke()
+                content = self.joke.create_record()
+            else:
+                self.choose_options()
                 break
-            print('\nIncorrect input. Try again!\n')
-        if option == '1':
-            content = self.new.create_record()
-        elif option == '2':
-            content = self.ad.create_record()
-        else:
-            content = self.joke.create_record()
-        self.news_feed = self.news_feed + content
-        print('\nNew content was added\n')
+            self.news_feed = self.news_feed + content
+            print(f'\n{content}\nNew content was added\n' if content is not None else 'No new content')
 
-    def parse_text_file(self):
-        pass
+    def add_content_from_text(self, txt):
+        raw_list = txt.split('-|-')
+        for elem in raw_list:
+            if re.search('News:', elem):
+                news = parse_text_by_pattern('News:(.+)City:(.*)$', elem)
+                if news is None:
+                    continue
+                raw_city = parse_text_by_pattern('City:(.+)$', elem)
+                city = raw_city if raw_city is not None else 'No city'
+                self.new.make_news(news, city)
+                content = self.new.create_record()
+            elif re.search('PrivateAd:', elem):
+                ad = parse_text_by_pattern('PrivateAd:(.+)Date:(.+)$', elem)
+                if ad is None:
+                    continue
+                date = parse_text_by_pattern('Date:(.+)$', elem)
+                self.ad.make_ad(ad, date)
+                content = self.ad.create_record()
+            elif re.search('Joke:', elem):
+                joke = parse_text_by_pattern('Joke:(.+)$', elem)
+                if joke is None:
+                    continue
+                self.joke.make_joke(joke)
+                content = self.joke.create_record()
+            else:
+                print('Wrong recognition pattern is detected in the file\n')
+                content = ''
+            self.news_feed = self.news_feed + content
 
     def show_news_feed(self):
-        for elem in self.news_feed:
-            print(elem)
+        print(self.news_feed)
 
     def read_file(self):
-        path = TextFile().get_full_path()
-        with open(path, 'r') as file:
-            text = file.read()
-        print('\nNews feed was read from file\n')
-        print(text)
-        return text
+        try:
+            print('To read file you need to...')
+            path = file_worker.get_full_path()
+            with open(path, 'r') as file:
+                text = file.read()
+            print('\nNews feed was read from file\n')
+            self.add_content_from_text(text)
+            os.remove(path)
+            print('The file was deleted\n')
+        except FileNotFoundError:
+            print('The file was not found\n')
+        self.choose_options()
 
-    def save_as_file(self, news_feed):
-        path = TextFile().get_full_path()
+    def save_as_file(self, txt=None):
+        news_feed = self.news_feed if txt is None else txt
+        print('To save News feed as a file you need to...')
+        path = file_worker.get_full_path()
         with open(path, 'w') as file:
             file.write(news_feed)
         print('\nNews feed was saved as a file\n')
 
+    def choose_options(self):
+        option = choose_option(
+            '1 - Add manually\n2 - Add from file\n3 - Show News feed\n4 - Save in file\n5 - Stop & Quit', 5)
+        if option == '1':
+            self.add_content_manually()
+        elif option == '2':
+            self.read_file()
+        elif option == '3':
+            self.show_news_feed()
+        elif option == '4':
+            self.save_as_file()
+        else:
+            pass
 
-NewsFeed().read_file()
-# my_news_feed.save_as_file()
-# my_news_feed.add_content_manually()
+
+NewsFeed().choose_options()
