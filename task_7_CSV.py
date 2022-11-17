@@ -46,8 +46,3 @@ class CsvParsing:
         self.save_as_csv('count_word.csv', count_word_list)
         count_letter_list = self.count_letter(raw_text)
         self.save_as_csv('count_letter.csv', count_letter_list)
-
-#
-# with open('txt_files/No_name_text_file.txt', 'r') as file:
-#     txt = file.read()
-#     CsvParsing().re_write_csv(txt)
