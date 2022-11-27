@@ -1,0 +1,16 @@
+{
+	"content_1": {
+		"type": "News",
+		"body": "Apple joins Facebook.",
+		"city": "los Angeles"
+	},
+	"content_2": {
+		"type": "Joke",
+		"body": "Jigurda is    Chubakka"
+	},
+	"content_3": {
+		"type": "PrivateAd",
+		"body": "Change a house for a Diesel_car",
+		"date": "12/12/22"
+	}
+}
