@@ -12,5 +12,9 @@
 		"type": "PrivateAd",
 		"body": "Change a house for a Diesel_car",
 		"date": "12/12/22"
+	},
+	"content_3": {
+		"type": "Joke",
+		"body": "А здесь попробуем Кириллицу"
 	}
 }
