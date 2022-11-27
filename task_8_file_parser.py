@@ -45,7 +45,7 @@ class FileParser:
 
     def add_content_from_text(self, data):
         text_content = ''
-        for elem in data:
+        for elem in data.split('-|-'):
             if re.search('News:', elem):
                 news = parse_text_by_pattern('News:(.+)City:(.*)$', elem)
                 if news is None:
@@ -75,7 +75,7 @@ class FileParser:
 
     def add_content_from_json(self, data):
         json_content = ''
-        for elem in data.items():
+        for elem in data.values():
             if elem['type'] == 'News':
                 news = elem['body']
                 if news is None:
@@ -84,14 +84,14 @@ class FileParser:
                 self.new.make_news(news, city)
                 content = self.new.create_record()
             elif elem['type'] == 'PrivateAd':
-                ad = elem['date']
+                ad = elem['body']
                 if ad is None:
                     continue
                 date = elem['date']
                 self.ad.make_ad(ad, date)
                 content = self.ad.create_record()
             elif elem['type'] == 'Joke':
-                joke = elem['date']
+                joke = elem['body']
                 if joke is None:
                     continue
                 self.joke.make_joke(joke)
@@ -99,5 +99,5 @@ class FileParser:
             else:
                 print('Wrong recognition pattern is detected in the file\n')
                 content = ''
-                json_content = json_content + content
-            return json_content
+            json_content = json_content + content
+        return json_content
