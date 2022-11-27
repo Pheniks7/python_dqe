@@ -1,6 +1,7 @@
 import os
 import re
 import json
+import xml.etree.ElementTree as ET
 import file_worker
 from task_7_CSV import CsvParsing
 from task_8_file_parser import FileParser
@@ -26,6 +27,9 @@ class NewsFeed:
                 elif file_type == 'json':
                     data = json.load(file)
                     self.news_feed = self.news_feed + self.parser.add_content_from_json(data)
+                elif file_type == 'xml':
+                    data = ET.parse(file)
+                    self.news_feed = self.news_feed + self.parser.add_content_from_xml(data)
                 else:
                     raise FileNotFoundError
             os.remove(path)
