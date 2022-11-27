@@ -15,8 +15,8 @@ class NewsFeed:
 
     def read_file(self):
         try:
-            print('To read file you need to...')
-            path = file_worker.get_full_path()
+            print('\nTo read file you need to...')
+            path = file_worker.get_read_path()
             file_type = re.search('.[a-z]+$', path).group(0).strip('.')
             with open(path, 'r') as file:
                 print('\nNews feed was read from file\n')
@@ -40,8 +40,8 @@ class NewsFeed:
 
     def save_as_file(self, txt=None):
         news_feed = self.news_feed if txt is None else txt
-        print('To save News feed as a file you need to...')
-        path = file_worker.get_full_path()
+        print('\nTo save News feed as a file you need to...')
+        path = file_worker.get_write_path()
         with open(path, 'w') as file:
             file.write(news_feed)
         print('\nNews feed was saved as a file\n')
