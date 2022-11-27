@@ -59,6 +59,8 @@ def check_one_match(txt):
 
 
 def capitalize_first_words(txt):
+    if txt is None or txt == '':
+        txt = 'No text'
     txt = start_paragraph(txt)
     txt = check_one_match(txt)
     return txt

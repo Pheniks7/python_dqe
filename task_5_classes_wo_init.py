@@ -13,7 +13,7 @@ class News:
     def make_news(self, txt=None, city=None):
         self.cur_time = datetime.now()
         self.txt = capitalize_first_words(input('\nType the news: ') if txt is None else txt)
-        self.city = (input('Enter the city: ').title() if city is None else city).title()
+        self.city = capitalize_first_words(input('Enter the city: ') if city is None else city)
 
     def create_record(self):
         text_to_publish = f'{self.txt}\n{self.city}, {self.cur_time.strftime("%d/%m/%Y %H.%m")}'
