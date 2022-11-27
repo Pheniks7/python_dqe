@@ -22,8 +22,8 @@ class CsvParsing:
 
     def count_letter(self, raw_text):
         text = raw_text.lower()
-        alphabet = list(string.ascii_lowercase)
-        total_count = len(re.findall('[a-z]{1}', text))
+        alphabet = list(string.ascii_lowercase) + list('абвгдеёжзийклмнопрстуфхцчшщъыьэюя')
+        total_count = len(re.findall('[a-zа-я]{1}', text))
         count_letter_list = []
         try:
             for letter in alphabet:
@@ -33,10 +33,12 @@ class CsvParsing:
             print('Game over')
         return count_letter_list
 
-    def save_as_csv(self, file_name, count_list):
+    def save_as_csv(self, file_name, count_list, header=None):
         if len(count_list) > 0:
-            with open(f'txt_files/{file_name}', 'w', newline='') as csvfile:
+            with open(f'txt_files/{file_name}', 'w', newline='', encoding='utf8') as csvfile:
                 writer = csv.writer(csvfile, dialect='excel')
+                if header is not None:
+                    writer.writerow(header)
                 for item in count_list:
                     writer.writerow(item)
             print(f'File {file_name} is updated\n')
@@ -45,4 +47,5 @@ class CsvParsing:
         count_word_list = self.count_word(raw_text.lower())
         self.save_as_csv('count_word.csv', count_word_list)
         count_letter_list = self.count_letter(raw_text)
-        self.save_as_csv('count_letter.csv', count_letter_list)
+        self.save_as_csv('count_letter.csv', count_letter_list,
+                         ['letter', 'count_all', 'count_uppercase', 'percentage'])
