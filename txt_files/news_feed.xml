@@ -1,0 +1,16 @@
+<news_feed>
+    <content type="News">
+        <body>Apple joins Facebook.</body>
+        <city>los Angeles</city>
+    </content>
+    <content type="Joke">
+        <body>Jigurda is    Chubakka</body>
+    </content>
+    <content type="PrivateAd">
+        <body>Change a house for a Diesel_car</body>
+        <date>12/12/22</date>
+    </content>
+	<content type="Joke">
+        <body>А здесь попробуем Кириллицу</body>
+    </content>
+</news_feed>
