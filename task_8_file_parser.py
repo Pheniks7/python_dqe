@@ -101,3 +101,33 @@ class FileParser:
                 content = ''
             json_content = json_content + content
         return json_content
+
+    def add_content_from_xml(self, data):
+        xml_content = ''
+        root = data.getroot()
+        for elem in root.iter('content'):
+            if elem.attrib['type'] == 'News':
+                news = elem.find('body').text
+                if news is None:
+                    continue
+                city = elem.find('city').text if elem.find('city') is not None else 'No city'
+                self.new.make_news(news, city)
+                content = self.new.create_record()
+            elif elem.attrib['type'] == 'PrivateAd':
+                ad = elem.find('body').text
+                if ad is None:
+                    continue
+                date = elem.find('date').text
+                self.ad.make_ad(ad, date)
+                content = self.ad.create_record()
+            elif elem.attrib['type'] == 'Joke':
+                joke = elem.find('body').text
+                if joke is None:
+                    continue
+                self.joke.make_joke(joke)
+                content = self.joke.create_record()
+            else:
+                print('Wrong recognition pattern is detected in the file\n')
+                content = ''
+            xml_content = xml_content + content
+        return xml_content
