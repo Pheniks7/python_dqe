@@ -18,7 +18,7 @@ class NewsFeed:
             print('\nTo read file you need to...')
             path = file_worker.get_read_path()
             file_type = re.search('.[a-z]+$', path).group(0).strip('.')
-            with open(path, 'r') as file:
+            with open(path, 'r', encoding='utf8') as file:
                 print('\nNews feed was read from file\n')
                 if file_type == 'txt' or file_type == 'doc':
                     data = file.read()
@@ -42,7 +42,7 @@ class NewsFeed:
         news_feed = self.news_feed if txt is None else txt
         print('\nTo save News feed as a file you need to...')
         path = file_worker.get_write_path()
-        with open(path, 'w') as file:
+        with open(path, 'w', encoding='utf8') as file:
             file.write(news_feed)
         print('\nNews feed was saved as a file\n')
         self.csv.re_write_csv(self.news_feed)
