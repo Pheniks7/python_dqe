@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from random import randrange
 from task_3_string import capitalize_first_words
+from task_10_ODBC import DBConnection
 
 
 def create_record_lines(class_name, text_to_publish):
@@ -14,6 +15,8 @@ class News:
         self.cur_time = datetime.now()
         self.txt = capitalize_first_words(input('\nType the news: ') if txt is None else txt)
         self.city = capitalize_first_words(input('Enter the city: ') if city is None else city)
+        self.db_conn = DBConnection()
+        self.db_conn.add_record('news', self.txt, self.city)
 
     def create_record(self):
         text_to_publish = f'{self.txt}\n{self.city}, {self.cur_time.strftime("%d/%m/%Y %H.%m")}'
@@ -24,6 +27,8 @@ class PrivateAd:
     def make_ad(self, txt=None, date=None):
         self.txt = capitalize_first_words(input('\nType the advertisement: ') if txt is None else txt)
         self.date = self.__check_input_date(date)
+        self.db_conn = DBConnection()
+        self.db_conn.add_record('private_ad', self.txt, self.date)
 
     def __check_input_date(self, date=None):
         for i in range(3):
@@ -52,6 +57,8 @@ class Joke:
     def make_joke(self, txt=None):
         self.txt = capitalize_first_words(input('\nType the joke: ') if txt is None else txt)
         self.rate = self.__rate_joke()
+        self.db_conn = DBConnection()
+        self.db_conn.add_record('joke', self.txt, self.rate)
 
     def __rate_joke(self):
         joke_meter_list = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten']
