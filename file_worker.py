@@ -1,4 +1,5 @@
 import os
+import re
 
 
 def get_read_path():
@@ -15,7 +16,7 @@ def get_write_path():
     output_file_name = input('Input the file_name\n'
                              'Note: to skip this step - press Enter button\n-- ')
     output_name_dir = os.path.join('txt_files', output_file_name)
-    # if not re.search('[\w]+.txt$', output_name_dir) and not re.search('[\w]+.doc$', output_name_dir):
-    if not os.path.isfile(output_name_dir):
+    print(output_name_dir)
+    if not re.search('[\w]+.txt$', output_name_dir) and not re.search('[\w]+.doc$', output_name_dir):
         output_name_dir = os.path.join('txt_files', 'No_name_text_file.txt')
     return output_name_dir
