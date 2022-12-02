@@ -1,10 +1,12 @@
 import os
 import re
 import json
+import sys
 import xml.etree.ElementTree as ET
 import file_worker
 from task_7_CSV import CsvParsing
 from task_8_file_parser import FileParser
+from task_10_ODBC import DBConnection
 
 
 class NewsFeed:
@@ -13,6 +15,7 @@ class NewsFeed:
         self.news_feed = 'News feed:\n'
         self.csv = CsvParsing()
         self.parser = FileParser()
+        self.db_conn = DBConnection()
 
     def read_file(self):
         try:
@@ -43,6 +46,7 @@ class NewsFeed:
     def show_news_feed(self):
         print(self.news_feed)
         self.csv.re_write_csv(self.news_feed)
+        self.db_conn.show_tables()
 
     def save_as_file(self, txt=None):
         news_feed = self.news_feed if txt is None else txt
@@ -52,6 +56,7 @@ class NewsFeed:
             file.write(news_feed)
         print('\nNews feed was saved as a file\n')
         self.csv.re_write_csv(self.news_feed)
+        self.db_conn.show_tables()
 
     def choose_options(self):
         option = self.parser.choose_option(
@@ -66,4 +71,4 @@ class NewsFeed:
         elif option == '4':
             self.save_as_file()
         else:
-            pass
+            sys.exit()
