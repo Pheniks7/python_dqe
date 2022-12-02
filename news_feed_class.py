@@ -19,6 +19,7 @@ class NewsFeed:
             print('\nTo read file you need to...')
             path = file_worker.get_read_path()
             file_type = re.search('.[a-z]+$', path).group(0).strip('.')
+            prev_len = len(self.news_feed)
             with open(path, 'r', encoding='utf8') as file:
                 print('\nNews feed was read from file\n')
                 if file_type == 'txt' or file_type == 'doc':
@@ -32,8 +33,9 @@ class NewsFeed:
                     self.news_feed = self.news_feed + self.parser.add_content_from_xml(data)
                 else:
                     raise FileNotFoundError
-            os.remove(path)
-            print('The file was deleted\n')
+            if len(self.news_feed) > prev_len:
+                os.remove(path)
+                print('The file was deleted\n')
         except FileNotFoundError:
             print('The file was not found\n')
         self.choose_options()
